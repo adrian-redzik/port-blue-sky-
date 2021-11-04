@@ -24,6 +24,7 @@ const getBonusDate = (date: Dayjs) => {
 }
 
 const monthsInFuture = 12;
+const dateFormat = 'DD-MM-YYYY';
 export const getPaymentDates = (startDate: Dayjs) => {
     const output: DateData[] = [];
 
@@ -34,13 +35,13 @@ export const getPaymentDates = (startDate: Dayjs) => {
         if (bonusDate.isAfter(startDate.startOf('day'))) {
             output.push({
                 type: PaymentType.BONUS,
-                date: bonusDate.format('DD-MM-YYYY'),
+                date: bonusDate.format(dateFormat),
             });
         }
 
         output.push({
             type: PaymentType.SALARY,
-            date: getSalaryDate(month).format('DD-MM-YYYY'),
+            date: getSalaryDate(month).format(dateFormat),
         });
     }
 
@@ -49,7 +50,7 @@ export const getPaymentDates = (startDate: Dayjs) => {
     if (bonusDate.isBefore(endMonth.endOf('day'))) {
         output.push({
             type: PaymentType.BONUS,
-            date: bonusDate.format('DD-MM-YYYY'),
+            date: bonusDate.format(dateFormat),
         });
     }
 
