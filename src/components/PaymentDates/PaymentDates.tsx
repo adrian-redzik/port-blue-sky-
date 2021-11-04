@@ -16,9 +16,7 @@ export const PaymentDates: FC = () => {
     const [paymentData, setPaymentData] = useState<DateData[]>([]);
 
     useEffect(() => {
-        if (startDate) {
-            setPaymentData(getPaymentDates(startDate));
-        }
+        setPaymentData(startDate ? getPaymentDates(startDate) : []);
     }, [startDate]);
 
     return (
