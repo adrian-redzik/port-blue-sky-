@@ -25,33 +25,34 @@ const getBonusDate = (date: Dayjs) => {
 
 const monthsInFuture = 12;
 const dateFormat = 'DD-MM-YYYY';
+
+const isDayInBounds = (startDate: Dayjs, day: Dayjs) => {
+    const endDate = startDate.add(monthsInFuture, 'months');
+
+    return day.isAfter(startDate.startOf('day')) && day.isBefore(endDate.endOf('day'));
+}
+
 export const getPaymentDates = (startDate: Dayjs) => {
     const output: DateData[] = [];
 
-    for (let i = 0; i < monthsInFuture; i++) {
+    for (let i = 0; i <= monthsInFuture; i++) {
         const month = startDate.add(i, 'months');
-
         const bonusDate = getBonusDate(month);
-        if (bonusDate.isAfter(startDate.startOf('day'))) {
+        const salaryDate = getSalaryDate(month);
+
+        if (isDayInBounds(startDate, bonusDate)) {
             output.push({
                 type: PaymentType.BONUS,
                 date: bonusDate.format(dateFormat),
             });
         }
 
-        output.push({
-            type: PaymentType.SALARY,
-            date: getSalaryDate(month).format(dateFormat),
-        });
-    }
-
-    const endMonth = startDate.add(monthsInFuture, 'months');
-    const bonusDate = getBonusDate(endMonth);
-    if (bonusDate.isBefore(endMonth.endOf('day'))) {
-        output.push({
-            type: PaymentType.BONUS,
-            date: bonusDate.format(dateFormat),
-        });
+        if (isDayInBounds(startDate, salaryDate)) {
+            output.push({
+                type: PaymentType.SALARY,
+                date: salaryDate.format(dateFormat),
+            });
+        }
     }
 
     return output;
